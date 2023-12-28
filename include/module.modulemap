@@ -1,0 +1,4 @@
+module BabyJubjub {
+    header "babyjubjub.h"
+    export *
+}
