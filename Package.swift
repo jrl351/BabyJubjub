@@ -16,7 +16,7 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .binaryTarget(
             name: "BabyJubjub",
-            url: "",
+            url: "https://github.com/jrl351/libbabyjubjub/releases/download/v0.0.1/libbabyjubjub.zip",
             checksum: "2337f6262e573f691d0707b98057438acddbbe324711cdce9e21d68b2ded4ed5"),
     ]
 )
