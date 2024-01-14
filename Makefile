@@ -27,7 +27,8 @@ help: makefile
 ## init: Install missing dependencies.
 .PHONY: init
 init:
-	rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios x86_64-apple-darwin aarch64-apple-darwin
+	mkdir libs
+	rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios aarch64-apple-darwin x86_64-apple-darwin
 	rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 	@if [ $$(uname) == "Darwin" ] ; then cargo install cargo-lipo ; fi
 	cargo install cbindgen
@@ -42,7 +43,39 @@ init:
 all: ios android bindings
 
 ## ios: Compile the iOS universal library
-ios: target/universal/release/libexample.a
+universal: target/universal/release/libexample.a
+
+ios: macos ios-sim ios-device
+
+macos: aarch64-apple-darwin x86_64-apple-darwin
+	lipo -create \
+ 		target/x86_64-apple-darwin/release/libbabyjubjub.a \
+		target/aarch64-apple-darwin/release/libbabyjubjub.a \
+		-output libs/libbabyjubjub-macos.a
+
+ios-sim: aarch64-apple-ios-sim x86_64-apple-ios
+	lipo -create \
+    	target/aarch64-apple-ios-sim/release/libbabyjubjub.a \
+    	target/x86_64-apple-ios/release/libbabyjubjub.a \
+    	-output libs/libbabyjubjub-ios-sim.a
+
+ios-device: aarch64-apple-ios
+	cp target/aarch64-apple-ios/release/libbabyjubjub.a libs/libbabyjubjub-ios.a
+
+aarch64-apple-darwin:
+	cargo build --release --lib --target aarch64-apple-darwin
+
+x86_64-apple-darwin:
+	cargo build --release --lib --target x86_64-apple-darwin
+
+aarch64-apple-ios-sim:
+	cargo build --release --lib --target aarch64-apple-ios-sim
+
+x86_64-apple-ios:
+	cargo build --release --lib --target x86_64-apple-ios
+
+aarch64-apple-ios:
+	cargo build --release --lib --target aarch64-apple-ios
 
 target/universal/release/libexample.a: $(SOURCES) ndk-home
 	@if [ $$(uname) == "Darwin" ] ; then \
@@ -50,7 +83,7 @@ target/universal/release/libexample.a: $(SOURCES) ndk-home
 		else echo "Skipping iOS compilation on $$(uname)" ; \
 	fi
 
-## android: Compile the android targuts (arm64, armv7 and i686)
+## android: Compile the android targets (arm64, armv7 and i686)
 android: target/aarch64-linux-android/release/libexample.so target/armv7-linux-androideabi/release/libexample.so target/i686-linux-android/release/libexample.so target/x86_64-linux-android/release/libexample.so
 
 target/aarch64-linux-android/release/libexample.so: $(SOURCES) ndk-home
