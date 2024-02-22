@@ -135,3 +135,16 @@ clean:
 .PHONY: test
 test:
 	cargo test
+
+## iOS Framework
+framework: ios bindings
+	cp target/bindings.h include/babyjubjub.h
+	rm -Rf BabyJubjub.xcframework
+	xcodebuild -verbose -create-xcframework \
+		-output BabyJubjub.xcframework \
+		-library ./libs/libbabyjubjub-macos.a \
+		-headers ./include/ \
+		-library ./libs/libbabyjubjub-ios-sim.a \
+		-headers ./include/ \
+		-library ./libs/libbabyjubjub-ios.a \
+		-headers ./include/
