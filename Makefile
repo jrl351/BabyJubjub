@@ -143,8 +143,5 @@ framework: ios bindings
 	xcodebuild -verbose -create-xcframework \
 		-output BabyJubjub.xcframework \
 		-library ./libs/libbabyjubjub-macos.a \
-		-headers ./include/ \
 		-library ./libs/libbabyjubjub-ios-sim.a \
-		-headers ./include/ \
-		-library ./libs/libbabyjubjub-ios.a \
-		-headers ./include/
+		-library ./libs/libbabyjubjub-ios.a
