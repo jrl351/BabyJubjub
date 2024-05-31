@@ -27,7 +27,7 @@ help: makefile
 ## init: Install missing dependencies.
 .PHONY: init
 init:
-	mkdir libs
+	mkdir -p libs
 	rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios aarch64-apple-darwin x86_64-apple-darwin
 	rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 	@if [ $$(uname) == "Darwin" ] ; then cargo install cargo-lipo ; fi
@@ -143,5 +143,8 @@ framework: ios bindings
 	xcodebuild -verbose -create-xcframework \
 		-output BabyJubjub.xcframework \
 		-library ./libs/libbabyjubjub-macos.a \
+		-headers ./include/ \
 		-library ./libs/libbabyjubjub-ios-sim.a \
-		-library ./libs/libbabyjubjub-ios.a
+		-headers ./include/ \
+		-library ./libs/libbabyjubjub-ios.a \
+		-headers ./include/
