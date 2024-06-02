@@ -22,8 +22,7 @@ let package = Package(
         .target(
             name: "BabyJubjubLibrary",
             dependencies: ["BabyJubjubBridge"],
-            path: "Sources/BabyJubjub",
-            sources: ["BabyJubjub.swift"]),
+            path: "Sources/BabyJubjub"),
         .target(
             name: "BabyJubjubBridge",
             dependencies: ["LibBabyJubjub"],
