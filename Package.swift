@@ -1,21 +1,38 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
-    name: "BabyJubjub",
+    name: "BabyJubjubLibrary",
+    platforms: [
+        .iOS(.v16),
+        .macOS(.v13),
+    ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "BabyJubjub",
-            targets: ["BabyJubjub"]),
+            name: "BabyJubjubLibrary",
+            targets: ["BabyJubjubLibrary"]),
     ],
+    
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
+        .target(
+            name: "BabyJubjubLibrary",
+            dependencies: ["BabyJubjubBridge"],
+            path: "Sources/BabyJubjub",
+            sources: ["BabyJubjub.swift"]),
+        .target(
+            name: "BabyJubjubBridge",
+            dependencies: ["LibBabyJubjub"],
+            path: "Sources/Bridge"),
         .binaryTarget(
-            name: "BabyJubjub",
+            name: "LibBabyJubjub",
             path: "BabyJubjub.xcframework"),
+        .testTarget(
+            name: "BabyJubjubTests",
+            dependencies: ["BabyJubjubLibrary"]),
        ]
 )
