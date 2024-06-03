@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "BabyJubjub",
     platforms: [
-        .iOS(.v12),
+        .iOS(.v14),
         .macOS(.v13),
     ],
     products: [
