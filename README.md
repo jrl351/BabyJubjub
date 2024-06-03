@@ -11,5 +11,6 @@ This code supports Android, but is only tested for iOS
 To rebuild the .xcframework, run the following:
 
 ```
+make init
 make framework
 ```

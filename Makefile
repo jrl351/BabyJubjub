@@ -27,7 +27,9 @@ help: makefile
 ## init: Install missing dependencies.
 .PHONY: init
 init:
-	mkdir -p libs
+	mkdir -p libs/macos
+	mkdir -p libs/ios
+	mkdir -p libs/ios-sim
 	rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios aarch64-apple-darwin x86_64-apple-darwin
 	rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 	@if [ $$(uname) == "Darwin" ] ; then cargo install cargo-lipo ; fi
@@ -51,16 +53,16 @@ macos: aarch64-apple-darwin x86_64-apple-darwin
 	lipo -create \
  		target/x86_64-apple-darwin/release/libbabyjubjub.a \
 		target/aarch64-apple-darwin/release/libbabyjubjub.a \
-		-output libs/libbabyjubjub-macos.a
+		-output libs/macos/libbabyjubjub.a
 
 ios-sim: aarch64-apple-ios-sim x86_64-apple-ios
 	lipo -create \
     	target/aarch64-apple-ios-sim/release/libbabyjubjub.a \
     	target/x86_64-apple-ios/release/libbabyjubjub.a \
-    	-output libs/libbabyjubjub-ios-sim.a
+    	-output libs/ios-sim/libbabyjubjub.a
 
 ios-device: aarch64-apple-ios
-	cp target/aarch64-apple-ios/release/libbabyjubjub.a libs/libbabyjubjub-ios.a
+	cp target/aarch64-apple-ios/release/libbabyjubjub.a libs/ios/libbabyjubjub.a
 
 aarch64-apple-darwin:
 	cargo build --release --lib --target aarch64-apple-darwin
@@ -142,9 +144,9 @@ framework: ios bindings
 	rm -Rf BabyJubjub.xcframework
 	xcodebuild -verbose -create-xcframework \
 		-output BabyJubjub.xcframework \
-		-library ./libs/libbabyjubjub-macos.a \
+		-library ./libs/macos/libbabyjubjub.a \
 		-headers ./include/ \
-		-library ./libs/libbabyjubjub-ios-sim.a \
+		-library ./libs/ios-sim/libbabyjubjub.a \
 		-headers ./include/ \
-		-library ./libs/libbabyjubjub-ios.a \
+		-library ./libs/ios/libbabyjubjub.a \
 		-headers ./include/
