@@ -105,8 +105,6 @@ final class BabyJubjubTests: XCTestCase {
         
         let signedMessage = "2a580ed879dd4d9d85868301fd6620c530ec147f386895eddec08b52fe2f3e8364f05df303496ffb4f2b64db174613f5828fde0333d18ee49965aa7cdcdd7401"
         
-        let compressedSignature = try XCTUnwrap(BabyJubjub.packSignature(signature: signedMessage))
-
         let result = BabyJubjub.verifyPoseidon(privateKey: privateKey,
                                                compressedSignature: signedMessage,
                                                message: message)
